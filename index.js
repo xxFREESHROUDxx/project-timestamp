@@ -19,7 +19,7 @@ app.get('/', function (req, res) {
 });
 
 // your first API endpoint...
-app.get('/api/timestamp/:date?', function (req, res) {
+app.get('/api/:date?', function (req, res) {
   // Store our date response. This will default to the current datatime
   let date = new Date();
 
@@ -27,7 +27,7 @@ app.get('/api/timestamp/:date?', function (req, res) {
   if (req.params.date) {
     let unixDate = +req.params.date;
 
-    date = isNAN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
+    date = isNaN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
 
     // Check if the date passed is unix time. If it's not, use the date string provided
     if (!(date instanceof Date) || isNAN(date.getTime())) {
