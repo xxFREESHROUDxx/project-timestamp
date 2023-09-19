@@ -27,6 +27,8 @@ app.get('/api/timestamp/:date?', function (req, res) {
   if (req.params.date) {
     let unixDate = +req.params.date;
 
+    date = isNAN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
+
     // Check if the date passed is unix time. If it's not, use the date string provided
     if (!(date instanceof Date) || isNAN(date.getTime()))
       return res.json({ error: 'Invalid Date' });
