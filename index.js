@@ -18,24 +18,26 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// your first API endpoint...
-app.get('/api/:date?', function (req, res) {
-  // Store our date response. This will default to the current datatime
-  let date = new Date();
+const isInvalidDate = (date) => date.toUTCString() === 'Invalid Date';
 
-  // Check if the optional date parameter was provided
-  if (req.params.date) {
-    let unixDate = +req.params.date;
+// your first API endpoint... 
+app.get("/api/:date", function(req, res) {
+  let date = new Date(req.params.date);
 
-    date = isNaN(unixDate) ? new Date(req.params.date) : new Date(unixDate);
-
-    // Check if the date passed is unix time. If it's not, use the date string provided
-    if (!(date instanceof Date) || isNAN(date.getTime())) {
-      return res.json({ error: 'Invalid Date' });
-    }
+  if (isInvalidDate(date)) {
+    date = new Date(+req.params.date);
   }
 
-  return res.json({ unix: date.getTime(), utc: date.toUTCString() });
+  if (isInvalidDate(date)) {
+    res.json({ error: "Invalid Date" });
+    return;
+  }
+
+  res.json({ unix: date.getTime(), utc: date.toUTCString() });
+});
+
+app.get("/api", (req, res) => {
+  res.json({ unix: new Date().getTime(), utc: new Date().toUTCString() })
 });
 
 // listen for requests :)
